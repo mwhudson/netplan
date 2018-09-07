@@ -315,6 +315,22 @@ RouteMetric=100
 '''})
         self.assert_networkd_udev(None)
 
+    def test_eth_optional_addresses(self):
+        self.generate('''network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp6: true
+      optional-addresses: [ipv4-ll]''')
+
+    def test_eth_optional_addresses_invalid(self):
+        self.generate('''network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp6: true
+      optional-addresses: [whut]''', expect_fail=True)
+
     def test_eth_wol(self):
         self.generate('''network:
   version: 2
