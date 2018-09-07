@@ -743,27 +743,26 @@ handle_link_local(yaml_document_t* doc, yaml_node_t* node, const void* _, GError
     return TRUE;
 }
 
+struct optional_address_option optional_address_options[] = {
+    {"ipv4-ll", OPTIONAL_IPV4_LL},
+    {"ipv6-ra", OPTIONAL_IPV6_RA},
+    {"dhcp4",   OPTIONAL_DHCP4},
+    {"dhcp6",   OPTIONAL_DHCP6},
+    {"static",  OPTIONAL_STATIC},
+    {NULL},
+};
+
 static gboolean
 handle_optional_addresses(yaml_document_t* doc, yaml_node_t* node, const void* _, GError** error)
 {
-    struct option { char* name; int flag; };
-    static struct option options[] = {
-	{"ipv4-ll", OPTIONAL_IPV4_LL},
-	{"ipv6-ra", OPTIONAL_IPV6_RA},
-	{"dhcp4",   OPTIONAL_DHCP4},
-	{"dhcp6",   OPTIONAL_DHCP6},
-	{"static",  OPTIONAL_STATIC},
-	{NULL},
-    };
-
     for (yaml_node_item_t *i = node->data.sequence.items.start; i < node->data.sequence.items.top; i++) {
         yaml_node_t *entry = yaml_document_get_node(doc, *i);
         assert_type(entry, YAML_SCALAR_NODE);
 	int found = FALSE;
 
-	for (unsigned i = 0; options[i].name != NULL; ++i) {
-	    if (g_ascii_strcasecmp(scalar(entry), options[i].name) == 0) {
-		cur_netdef->optional_addresses |= options[i].flag;
+	for (unsigned i = 0; optional_address_options[i].name != NULL; ++i) {
+	    if (g_ascii_strcasecmp(scalar(entry), optional_address_options[i].name) == 0) {
+		cur_netdef->optional_addresses |= optional_address_options[i].flag;
 		found = TRUE;
 		break;
 	    }

@@ -63,6 +63,13 @@ typedef enum {
     OPTIONAL_STATIC  = 1<<4,
 } optional_addr;
 
+struct optional_address_option {
+    char* name;
+    optional_addr flag;
+};
+
+extern struct optional_address_option optional_address_options[];
+
 typedef struct missing_node {
     char* netdef_id;
     const yaml_node_t* node;

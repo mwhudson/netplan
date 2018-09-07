@@ -321,7 +321,20 @@ RouteMetric=100
   ethernets:
     eth0:
       dhcp6: true
-      optional-addresses: [ipv4-ll]''')
+      optional-addresses: [dhcp6]''')
+        self.assert_networkd({'eth0.network': '''[Match]
+Name=eth0
+
+[Link]
+OptionalAddresses=dhcp6
+[Network]
+DHCP=ipv6
+LinkLocalAddressing=ipv6
+
+[DHCP]
+UseMTU=true
+RouteMetric=100
+'''})
 
     def test_eth_optional_addresses_invalid(self):
         self.generate('''network:
